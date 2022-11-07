@@ -1,0 +1,1 @@
+web: build/install/com.example.ktorm-mysql-app/bin/com.example.ktorm-mysql-app

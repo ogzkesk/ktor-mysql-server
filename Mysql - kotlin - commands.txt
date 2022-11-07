@@ -1,0 +1,65 @@
+    // Insert data
+    database.insert(NotesEntity){ notes ->
+        set(notes.note, "Learning ktor")
+    }
+
+    // Fetch data from db 1
+    val notes = database.from(NotesEntity).select()
+    notes.forEach { row ->
+        println("${row[NotesEntity.id]} : ${row[NotesEntity.note]}")
+    }
+    // Fetch data from db 2
+	val notes = db.from(NotesEntity).select()
+            .map {
+                val id = it[NotesEntity.id]
+                val note = it[NotesEntity.note]
+
+                NotesModel(id ?: -1,note ?: "")
+            }
+
+
+    // Update data
+    database.update(NotesEntity) {notes ->
+        // Change to data id = 4 to -> "Working mysql"
+        set(notes.note, "Working mysql")
+        where {
+            notes.id eq 4
+        }
+    }
+
+    // Delete data
+    database.delete(NotesEntity) { notes ->
+        // Delete data at id = 3
+        notes.id eq 3
+    }
+
+    // Get data by id
+	val idReq = call.parameters["id"]?.toInt() ?: -1
+
+        val note = db.from(NotesEntity)
+            .select()
+            .where { NotesEntity.id eq idReq }
+            .map {
+                val id = it[NotesEntity.id]!!
+                val note = it[NotesEntity.note]!!
+
+                NotesModel(id = id, note = note)
+            }.firstOrNull()
+
+
+
+MYSQL : 
+
+CREATE DATABASE notes;
+USE notes;
+CREATE TABLE notes(
+id int NOT NULL AUTO_INCREMENT,
+note varchar(1500) NOT NULL,
+PRIMARY KEY(id)
+)
+
+
+CALL :
+
+use notes;
+Select * from note;
